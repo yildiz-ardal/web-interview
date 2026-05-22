@@ -6,17 +6,11 @@ import AddIcon from '@mui/icons-material/Add'
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos)
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    saveTodoList(todoList.id, { todos })
-  }
-
   return (
     <Card sx={{ margin: '0 1rem' }}>
       <CardContent>
         <Typography component='h2'>{todoList.title}</Typography>
         <form
-          onSubmit={handleSubmit}
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
         >
           {todos.map((name, index) => (
@@ -36,17 +30,20 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                     ...todos.slice(index + 1),
                   ])
                 }}
+                onBlur={() => saveTodoList(todoList.id, { todos })}
               />
               <Button
                 sx={{ margin: '8px' }}
                 size='small'
                 color='secondary'
                 onClick={() => {
-                  setTodos([
+                  const newTodos = [
                     // immutable delete
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1),
-                  ])
+                  ]
+                  setTodos(newTodos)
+                  saveTodoList(todoList.id, { todos: newTodos })
                 }}
               >
                 <DeleteIcon />
@@ -62,9 +59,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               }}
             >
               Add Todo <AddIcon />
-            </Button>
-            <Button type='submit' variant='contained' color='primary'>
-              Save
             </Button>
           </CardActions>
         </form>
