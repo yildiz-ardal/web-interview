@@ -7,5 +7,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: {},
+  rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+  },
 }
