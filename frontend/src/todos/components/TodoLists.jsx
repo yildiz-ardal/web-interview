@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import ReceiptIcon from '@mui/icons-material/Receipt'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { TodoListForm } from './TodoListForm'
 
 const fetchTodoLists = async () => {
@@ -46,14 +47,18 @@ export const TodoLists = ({ style }) => {
         <CardContent>
           <Typography component='h2'>My Todo Lists</Typography>
           <List>
-            {Object.keys(todoLists).map((key) => (
-              <ListItemButton key={key} onClick={() => setActiveList(key)}>
-                <ListItemIcon>
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary={todoLists[key].title} />
-              </ListItemButton>
-            ))}
+            {Object.keys(todoLists).map((key) => {
+              const list = todoLists[key]
+              const isCompleted = list.todos.length > 0 && list.todos.every(todo => todo.completed)
+              return (
+                <ListItemButton key={key} onClick={() => setActiveList(key)}>
+                  <ListItemIcon>
+                    {isCompleted ? <CheckCircleIcon color='success' /> : <ReceiptIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={list.title} />
+                </ListItemButton>
+              )
+            })}
           </List>
         </CardContent>
       </Card>

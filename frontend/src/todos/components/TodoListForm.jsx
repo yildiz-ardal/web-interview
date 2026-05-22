@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Card, CardContent, CardActions, Button, Typography } from '@mui/material'
+import { TextField, Card, CardContent, CardActions, Button, Typography, Checkbox } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 
@@ -13,24 +13,36 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
         <form
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
         >
-          {todos.map((name, index) => (
+          {todos.map((todo, index) => (
             <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
               <Typography sx={{ margin: '8px' }} variant='h6'>
                 {index + 1}
               </Typography>
               <TextField
-                sx={{ flexGrow: 1, marginTop: '1rem' }}
+                sx={{ flexGrow: 1, marginTop: '1rem', textDecoration: todo.completed ? 'line-through' : 'none' }}
                 label='What to do?'
-                value={name}
+                value={todo.text}
                 onChange={(event) => {
                   setTodos([
                     // immutable update
                     ...todos.slice(0, index),
-                    event.target.value,
+                    { ...todo, text: event.target.value },
                     ...todos.slice(index + 1),
                   ])
                 }}
                 onBlur={() => saveTodoList(todoList.id, { todos })}
+              />
+              <Checkbox
+                checked={todo.completed}
+                onChange={() => {
+                  const newTodos = [
+                    ...todos.slice(0, index),
+                    { ...todo, completed: !todo.completed },
+                    ...todos.slice(index + 1),
+                  ]
+                  setTodos(newTodos)
+                  saveTodoList(todoList.id, { todos: newTodos })
+                }}
               />
               <Button
                 sx={{ margin: '8px' }}
@@ -55,7 +67,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, { text: '', completed: false }])
               }}
             >
               Add Todo <AddIcon />
