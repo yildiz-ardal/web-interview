@@ -3,18 +3,19 @@ import { TextField, Card, CardContent, CardActions, Button, Typography, Checkbox
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 
+const getDueLabel = (dueDate) => {
+  if (!dueDate) return null
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const diff = Math.round((new Date(dueDate) - today) / (1000 * 60 * 60 * 24))
+  if (isNaN(diff)) return null
+  if (diff === 0) return { label: 'Due today', color: 'warning.main' }
+  if (diff > 0) return { label: `${diff} day${diff === 1 ? '' : 's'} remaining`, color: 'success.main' }
+  return { label: `${Math.abs(diff)} day${Math.abs(diff) === 1 ? '' : 's'} overdue`, color: 'error.main' }
+}
+
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos)
-
-  const getDueLabel = (dueDate) => {
-    if (!dueDate) return null
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const diff = Math.round((new Date(dueDate) - today) / (1000 * 60 * 60 * 24))
-    if (diff === 0) return { label: 'Due today', color: 'warning.main' }
-    if (diff > 0) return { label: `${diff} day${diff === 1 ? '' : 's'} remaining`, color: 'success.main' }
-    return { label: `${Math.abs(diff)} day${Math.abs(diff) === 1 ? '' : 's'} overdue`, color: 'error.main' }
-  }
 
   return (
     <Card sx={{ margin: '0 1rem' }}>
@@ -24,7 +25,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
         >
           {todos.map((todo, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'flex-start' }}>
+            <div key={todo.id} style={{ display: 'flex', alignItems: 'flex-start' }}>
               <Typography sx={{ margin: '8px' }} variant='h6'>
                 {index + 1}
               </Typography>
@@ -101,7 +102,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, { text: '', completed: false, dueDate: null }])
+                setTodos([...todos, { id: crypto.randomUUID(), text: '', completed: false, dueDate: null }])
               }}
             >
               Add Todo <AddIcon />

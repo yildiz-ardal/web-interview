@@ -19,7 +19,6 @@ const fetchTodoLists = async () => {
   return res.json()
 }
 
-
 export const TodoLists = ({ style }) => {
   const [todoLists, setTodoLists] = useState({})
   const [activeList, setActiveList] = useState()
@@ -27,7 +26,7 @@ export const TodoLists = ({ style }) => {
 
   const saveTodoList = async (id, { todos }) => {
     const res = await fetch(`/todo-lists/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ todos }),
     })
