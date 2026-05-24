@@ -7,6 +7,7 @@ import {
   ListItemText,
   ListItemIcon,
   Typography,
+  CircularProgress
 } from '@mui/material'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
@@ -40,7 +41,7 @@ export const TodoLists = ({ style }) => {
   }, [])
 
   if (error) return <Typography color='error'>{error}</Typography>
-  if (!Object.keys(todoLists).length) return null // show spinner instead?
+  if (!Object.keys(todoLists).length) return <CircularProgress sx={{ margin: '2rem' }} />
   return (
     <Fragment>
       <Card style={style}>
